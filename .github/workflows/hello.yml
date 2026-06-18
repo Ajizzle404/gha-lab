@@ -12,4 +12,6 @@ jobs:
         run: date
       - name: List files
         run: ls -la
+      - name: Show system info
+        run: uname -a
 
