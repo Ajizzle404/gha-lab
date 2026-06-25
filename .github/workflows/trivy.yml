@@ -2,28 +2,29 @@ name: Trivy Security Scan
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  trivy-scan:
-    name: Build & Scan Docker Image
+  build-and-trivy:
     runs-on: ubuntu-latest
+    # no dependencies so this job can run standalone
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t gha-lab:${{ github.sha }} .
+        run: docker build -t vuln-lab:${{ github.sha }} .
 
-      - name: Run Trivy vulnerability scanner
+      - name: Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: gha-lab:${{ github.sha }}
+          image-ref: "vuln-lab:${{ github.sha }}"
           format: table
-          exit-code: '1'
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
