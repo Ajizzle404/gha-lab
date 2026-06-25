@@ -1,10 +1,11 @@
-FROM node:20-alpine
+FROM node:14
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --production
 
 COPY . .
 
-CMD ["node", "app/sum.js"]
+EXPOSE 3000
+CMD ["node", "index.js"]
